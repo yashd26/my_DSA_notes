@@ -90,3 +90,24 @@ void postorder(struct Node *p) {
         print(p -> data);
     }
 }
+
+// BFS tree taversal
+void printBFS(TreeNode *r) {
+    h = height(r);
+    for(i = 0; i <= h) {
+        print_given_lvl(r, h);
+    }
+}
+
+void print_given_lvl(TreeNode *r, int lvl) {
+    if (r == NULL) {
+        return;
+    }
+    else if(lvl == 0) {
+        print(r -> val);
+    }
+    else {
+        print_given_lvl(r -> left, lvl - 1);
+        print_given_lvl(r -> right, lvl - 1);
+    }
+}

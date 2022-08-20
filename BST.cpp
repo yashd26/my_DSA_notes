@@ -190,3 +190,38 @@ void createFromPreorder(int *pre, int n) {
         }
     }
 }
+
+// check for balanced BST
+int check(TreeNode *node) {
+    if (node == NULL) {
+        return 0;
+    }
+    lh = check(node -> left);
+    rh = check(node -> right);
+    
+    if (lh == -1 && rh == -1) {
+        return -1;
+    }
+    if (abs(lh - rh) > 1) {
+        return -1;
+    }
+    return max(lh, rh) + 1;
+}
+
+// create BT from preorder vector
+TreeNode *create_bst(vector<int>& vec, int& i, int max_val = INT_MAX) {
+    if (i == vec.size() || vec[i] > max_val) {
+        return NULL;
+    }
+    TreeNode *node = new TreeNode(vec[i++]);
+        
+    node -> left = create_bst(vec, i, node -> val);
+    node -> right = create_bst(vec, i, max_val);
+        
+    return node;
+}
+    
+TreeNode* bstFromPreorder(vector<int>& preorder) {
+    int i = 0;
+    return create_bst(preorder, i);
+}
