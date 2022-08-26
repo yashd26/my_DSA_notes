@@ -75,7 +75,7 @@ void DFS(int i) {
 
 // DFS in graph using adjacency list
 void dfs(int node, vector<int> &vis, vector<vector<int>> graph, vector<int> storeDfs) {
-    toreDfs.push_back(node);
+    storeDfs.push_back(node);
     vis[node] = 1;
     for(auto it: graph[node]) {
         if (!vis[it]) {
