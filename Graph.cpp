@@ -4,7 +4,7 @@
             [0, 1, 0, 0, 1], 
             [0, 1, 1, 1, 0]] 
 */
-/*graph(list) = [[2, 3, 4], 
+/*graph(list) = [[2, 3, 4],
             [0, 1, 4], 
             [0, 1, 2], 
             [1, 2, 3], 
@@ -249,4 +249,63 @@ vector<int> topoSort(int N, vector<int> adj[]) {
         st.pop();
     }
     return topo;
+}
+
+// cycle detection in undirected graph
+bool checkForCycle(int node, int parent, vector<int> &vis, vector<vector<int>> adj) {
+    vis[node] = 1;
+    for(auto it: adj[node]) {
+        if (!vis[it]) {
+            if (checkForCycle(it, node, vis, adj)) {
+                return true;
+            }
+            else if(it != parent) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+bool isCycle(int V, vector<vector<int>> adj) {
+    vector<int> vis(V + 1, 0);
+    for(int i = 1; i <= V; ++i) {
+        if (!vis[i]) {
+            if (checkForCycle(i, -1, vis, adj)) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+// cycle detection in directed graph
+bool checkForCycle(itn node, vector<vector<int>> adj, vector<int> vis, vector<int> dfsVis) {
+    vis[node] = 1;
+    dfsVis[node] = 1;
+    for(auto it: adj[it]) {
+        if (!vis[it]) {
+            if (checkForCycle(it, adj, vis, dfsVis)) {
+                return true;
+            }
+        }
+        else if(dfsVis[it]) {
+            return true;
+        }
+    }
+
+    dfsVis[node] = 0;
+    return false;
+}
+
+bool isCycle(int N, vector<vector<int>> adj) {
+    vector<int> vis(N, 0);
+    vector<int> dfsVis(N, 0);
+
+    for(int i = 0; i < N; ++i) {
+        if (checkForCycle(i, adj, vis, dfsVis)) {
+            return true;
+        }
+    }
+    return false;
 }
