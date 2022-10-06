@@ -283,7 +283,7 @@ bool isCycle(int V, vector<vector<int>> adj) {
 bool checkForCycle(int node, vector<vector<int>> adj, vector<int> vis, vector<int> dfsVis) {
     vis[node] = 1;
     dfsVis[node] = 1;
-    for(auto it: adj[it]) {
+    for(auto it: adj[node]) {
         if (!vis[it]) {
             if (checkForCycle(it, adj, vis, dfsVis)) {
                 return true;
