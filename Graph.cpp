@@ -280,7 +280,7 @@ bool isCycle(int V, vector<vector<int>> adj) {
 }
 
 // cycle detection in directed graph
-bool checkForCycle(itn node, vector<vector<int>> adj, vector<int> vis, vector<int> dfsVis) {
+bool checkForCycle(int node, vector<vector<int>> adj, vector<int> vis, vector<int> dfsVis) {
     vis[node] = 1;
     dfsVis[node] = 1;
     for(auto it: adj[it]) {
