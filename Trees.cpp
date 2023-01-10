@@ -111,3 +111,25 @@ void print_given_lvl(TreeNode *r, int lvl) {
         print_given_lvl(r -> right, lvl - 1);
     }
 }
+
+// BFS tree taversal
+void printBFS(TreeNode* root) {
+    if (!root) {
+        return;
+    }
+    queue<TreNode*> q;
+    q.push(root);
+    while(!q.empty()) {
+        int size = q.size();
+        for(int i = 0; i < size; ++i) {
+            TreeNode *node = q.front();
+            q.pop();
+            if (node -> left) {
+                print(node -> left -> val);
+            }
+            if (node -> right) {
+                print(node -> right -> val);
+            }
+        }
+    }
+}
