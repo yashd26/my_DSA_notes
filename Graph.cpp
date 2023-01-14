@@ -223,8 +223,8 @@ void main() {
     print(t);
 }
 
-//Topological sort
-void findTopoSort(int node, vector<int> &vis, stack<int> &st, vector<int> adj[]) {
+//Topological sort using DFS
+void findTopoSort(int node, vector<int> &vis, stack<int> &st, vector<vector<int>> adj) {
     vis[node] = 1;
     
     for(auto it: adj[node]) {
@@ -235,7 +235,7 @@ void findTopoSort(int node, vector<int> &vis, stack<int> &st, vector<int> adj[])
     st.push(node);
 }
 
-vector<int> topoSort(int N, vector<int> adj[]) {
+vector<int> topoSort(int N, vector<vector<int>> ad) {
     stack<int> st;
     vector<int> vis(N, 0);
     for(int i = 0; i < N; ++i) {
@@ -248,6 +248,39 @@ vector<int> topoSort(int N, vector<int> adj[]) {
         topo.push_back(st.top());
         st.pop();
     }
+    return topo;
+}
+
+// Kahn's algo
+vector<int> topoSort(int V, vector<vector<int>> adj) {
+    int indegree[V] = {0};
+    for(int i = 0; i < V; ++i) {
+        for(auto it: adj[i]) {
+            indegree[it]++;
+        }
+    }
+
+    queue<int> q;
+    for(int i = 0; i < V; ++i) {
+        if (!indegree[i]) {
+            q.push(i);
+        }
+    }
+
+    vector<int> topo;
+    while(!q.empty()) {
+        int node = q.front();
+        q.pop();
+        todo.push_back(node);
+
+        for(auto it: adj[node]) {
+            indegree[it]--;
+            if (!indegree[it]) {
+                q.push(it);
+            }
+        }
+    }
+
     return topo;
 }
 
