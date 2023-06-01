@@ -55,23 +55,6 @@ int partition(int A[], int l, int h) {
       Swap(A[i], A[j]);
     }
   }
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   swap(A[l], A[j]);
   return j;
 }
