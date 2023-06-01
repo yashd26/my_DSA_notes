@@ -44,20 +44,33 @@ void SelectionSort(int A[], int n) {
 int partition(int A[], int l, int h) {
   int pivot = A[l];
   int i = l, j = h;
-  do {
-    do {
+  While(i < j) {
+    While(A[i] <= A[pivot] && i <= h - 1) {
       i++;
-    } 
-    while(A[i] <= pivot);
-    do {
+    }
+    While(A[j] > A[pivot] && j >= l + 1) {
       j--;
     }
-    while(A[j] > pivot);
     if (i < j) {
-        swap( & A[i], & A[j]);
+      Swap(A[i], A[j]);
     }
-  } 
-  while (i < j);
+  }
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   swap(A[l], A[j]);
   return j;
