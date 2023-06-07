@@ -123,12 +123,13 @@ void printBFS(TreeNode* root) {
         int size = q.size();
         for(int i = 0; i < size; ++i) {
             TreeNode *node = q.front();
+            print(node -> val);
             q.pop();
             if (node -> left) {
-                print(node -> left -> val);
+                q.push(node -> left);
             }
             if (node -> right) {
-                print(node -> right -> val);
+                q.push(node -> right);
             }
         }
     }
