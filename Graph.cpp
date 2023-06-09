@@ -342,3 +342,91 @@ bool isCycle(int N, vector<vector<int>> adj) {
     }
     return false;
 }
+
+// Dijkstra's algo
+//graph = {{{node2, weight}, {node5, weight}}, {{node3, weight},..},...} 
+vector<int> dijkstra(vector<vector<int>> graph[], int V, int startNode) {
+    set<pair<int, int>> st;
+    vector<int> dist(V, 1e9);
+
+    st.insert({0, startNode});
+    dist[0] = 0;
+
+    while(!st.empty()) {
+        auto it = *(st.begin());
+        int node = it.second;
+        int dis = it.first;
+
+        for(auto it: graph[node]) {
+            int adjNode = it.second;
+            int adjDis = it.first;
+
+            if (dis + adjDis < dist[adjNode]) {
+                if (dist[adjNode] != 1e9) {
+                    st.erase(dist[adjNode], adjNode);
+                }
+                dist[adjNode] = adjDis + dis;
+                st.insert(dist[adjNode], adjNode);
+            }
+        }
+    }
+
+    return dist;
+}
+
+// Bellman ford algo && also check for negative cycle
+// graph = {{node1, node1, weight}, {node2, node5, weight},...}
+vector<int> bellmanFord(vector<vector<int> graph, int V, int startNode) {
+    vector<int> dist(V, 1e9);
+    dist[0] = 0;
+
+    for(int i = 0; i < V - 1; ++i) {
+        for(auto it: graph) {
+            int node1 = it[0];
+            int node2 = it[1];
+            int weight = it[2];
+
+            if (dist[u] != 1e9 && dist[u] + weight < dist[v]) {
+                dist[v] = dist[u] + weight;
+            }
+        }
+    }
+
+    //detect negative cycle
+    for(auto it: graph) {
+        int node1 = it[0];
+        int node2 = it[1];
+        int weight = it[2];
+
+        if (dist[u] != 1e9 && dist[u] + weight < dist[v]) {
+            //true
+            return {-1};
+        }
+    }
+
+    return dist;
+}
+
+//Floyd warshall algo && detect negative cycle
+/* matrix[V][V] = [[0, 1, 5],
+                   [-1, 0, -1],
+                   [-1, 9, 0]]
+*/// (where matrix[i][i] = 0 && matrix[i][j] = -1 implies no edge
+void floyd(vector<vector<int>> matrix) {
+    int n = matrix.size();
+
+    for(int i = 0; i < n; ++i) {
+        for(int k = 0; k < n; ++k) {
+            for(int j = 0; j < n; ++j) {
+                matrix[k][j] = min(matrix[k][j], matrix[k][i] + matrix[i][j]);
+            }
+        }
+    }
+
+    //detect negative cycle
+    for(int i = 0; i < n; ++i) {
+        if (matrix[i][i] < 0) {
+            //true
+        }
+    }
+}
