@@ -109,59 +109,35 @@ function() {
     }
 }
 
-// Prims algo
-int I = INT_MAX;
-int cost[s][s] = {{I, I, I, I}, // s = size of graph
-                  {I, 25, 5, 14},
-                  {I, 60, I, 40},
-                  {I, 23, 19, I}};
+// Prims algo (return sum of mst weight)
+// if the path is required, carry parent
+//graph = {{{node2, weight}, {node5, weight}}, {{node3, weight},..},...}
+int prim(int V, vector<vector<int>> graph[]) {
+    priority_queue<pair<int, int>> pq;
+    vector<int> vis(V, 0);
 
-int near[s] = {I, I, I, I};
-int t[2][s - 1];
+    pq.push({0, 0});
+    int sum = 0;
+    while(!pq.empty()) {
+        auto it = pq.top();
+        pq.pop();
+        int node = it.second;
+        int weight = it.first;
 
-void main() {
-    int i, j, k, u, v, n = 3, min = I;
-    for(i = 1; i <= n; ++i) {
-        for(j = i, j <= n, ++j) {
-            if (cost[i][j] < min) {
-                min = cost[i][j];
-                u = i;
-                v = j;
+        if (vis[node] != 1) {
+            vis[node] = 1;
+            sum += 1;
+            for(auto it: graph[node]) {
+                int adjNode = it[1];
+                int adjWeight = it[0];
+                if (!vis[adjNode]) {
+                    pq.push({adjWeight, adjNode});
+                }
             }
         }
     }
 
-    t[0][0] = u;
-    t[1][0] = v;
-    near[u] = near[v] = 0;
-    for(i = 1; i <= n; ++i) {
-        if (near[i] && cost[i][u] < cost[i][v]) {
-            near[i] = u;
-        }
-        else {
-            near[i] = v;
-        }
-    }
-
-    for(i = 1; i < n - 1; ++i) {
-        min  = I;
-        for(j = 1; j <= n; ++j) {
-            if (near[j] && cost[j][near[j]] < min) {
-                min = cost[j][near[j]];
-                k = j;
-            }
-        }
-        t[0][i] = k;
-        t[1][i] = near[k];
-        near[k] = 0;
-
-        for(j = 1; j <= n; ++j) {
-            if (near[j] && cost[j][k] < cost[j][near[j]]) {
-                near[j] = k;
-            }
-        }
-    }
-    print(t);
+    return sum;
 }
 
 // union of disjoint sets
@@ -185,42 +161,75 @@ int find(int u) {
 }
 
 // kruskal's algorithm
-int edges[3][e] = {{1, 2, 5, 7, 2}, // e = no. of edges
-                   {1, 3, 6, 18, 20},
-                   {2, 3, 4, 15, 23}};
-
-int set[e - 1] = {-1, -1, -1, -1, -1, ...};
-int included[e] = {0}, t[2][s - 1]; // s = size of graph
-
-void union(int u, int v) {
-    if (set[u] < set[v]) {
-        set[u] += set[v];
-        set[v] = u;
-    } else {
-        set[v] += set[u];
-        set[u] = v;
+/* edgelist[V][V] = [[weight, node1, node2],
+                   [w, n3, n5],
+                   [w, n1, n3]]
+*/
+// f the path is required, carry parent
+class DSU {
+    int* parent;
+    int* rank;
+ 
+public:
+    DSU(int n)
+    {
+        parent = new int[n];
+        rank = new int[n];
+ 
+        for (int i = 0; i < n; i++) {
+            parent[i] = -1;
+            rank[i] = 1;
+        }
     }
-}
-
-void main() {
-    int i = ,0, j, k, n = 4, e = 6, min, u, v;
-    while(i < n - 1) {
-        min = I;
-        for(j = 0; j < e; ++j) {
-            if (included[j] == 0 && edges[2][j] < min) {
-                min = edges[2][j];
-                k = j; u = edges[0][j]; v = edges[i][j];
+ 
+    int find(int i)
+    {
+        if (parent[i] == -1)
+            return i;
+ 
+        return parent[i] = find(parent[i]);
+    }
+ 
+    void unite(int x, int y)
+    {
+        int s1 = find(x);
+        int s2 = find(y);
+ 
+        if (s1 != s2) {
+            if (rank[s1] < rank[s2]) {
+                parent[s1] = s2;
+            }
+            else if (rank[s1] > rank[s2]) {
+                parent[s2] = s1;
+            }
+            else {
+                parent[s2] = s1;
+                rank[s1] += 1;
             }
         }
-        if (find(u) != find(v)) {
-            t[0][i] = u; t[1][i] = v;
-            union(find(u), find(v));
-            i++;
-        }
-        included[k] = 1;
     }
+};
+ 
+void kruskals_mst(vector<vector<int>> edgelist) {
+    // Sort all edges
+    sort(edgelist.begin(), edgelist.end());
 
-    print(t);
+    // Initialize the DSU
+    DSU s(V);
+    int ans = 0;
+    for (auto edge : edgelist) {
+        int w = edge[0];
+        int x = edge[1];
+        int y = edge[2];
+
+        // Take this edge in MST if it does
+        // not forms a cycle
+        if (s.find(x) != s.find(y)) {
+            s.unite(x, y);
+            ans += w;
+        }
+    }
+    return ans;
 }
 
 //Topological sort using DFS
