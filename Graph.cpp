@@ -310,9 +310,10 @@ bool checkForCycle(int node, int parent, vector<int> &vis, vector<vector<int>> a
             if (checkForCycle(it, node, vis, adj)) {
                 return true;
             }
-            else if(it != parent) {
-                return true;
-            }
+
+        }
+        else if(it != parent) {
+            return true;
         }
     }
     return false;
